@@ -11,9 +11,12 @@ const App = () => {
         
         {/* <Route path="/" element={<HomePage />}></Route> */}
 
-        <Route element={<PrivateRoute/>}>
-            <Route path="/login"></Route>
-        </Route>
+        <Route 
+          path="/login" 
+          element={<LoginPage />} 
+        />
+           
+
          
         <Route 
             path="/register" 
