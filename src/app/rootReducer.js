@@ -1,5 +1,5 @@
-import authReducer from "../features/auth/authSlice"
+import authReducer from "../features/auth/authSlice";
 
 export const rootReducer = {
-    auth: authReducer
-}
+  auth: authReducer,
+};

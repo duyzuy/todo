@@ -1,59 +1,84 @@
-import { take, put, fork, delay, call } from "redux-saga/effects"
-import { authAction } from "./authSlice"
+import { take, put, fork, delay, call, takeLatest } from "redux-saga/effects";
+import { authAction } from "./authSlice";
+import { addDoc, collection } from "firebase/firestore"; 
+import {db} from "../../firebaseConfig";
+import { auth } from "../../firebaseConfig";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+function* handleLoginSaga(action) {
+  //get response from api (fake api)
+  yield delay(1000);
 
-export function* handleLoginSaga(action) {
+  const { payload } = action;
 
+  const { onSuccess, onError, data } = payload;
 
-  
-    //get response from api (fake api)
-    yield delay(1000)
-    console.log(action)
-    const { payload } = action;
-    const {cb, data} = payload
-    const response = {
-        name: "Nguyen van A",
-        email: "nguyenvana@gmail.com",
-        access_token: "123123123",
-    }
+    try {
+        const response = yield signInWithEmailAndPassword(auth, data.email, data.password);
+        //save data on local storage
+        localStorage.setItem("access_token", response.accessToken);
 
-    localStorage.setItem("access_token", "secret__token");
-    yield put(authAction.loginSuccess(response));
+        //update state after login success
+        yield put(authAction.loginSuccess(response.user));
 
-   
-  
-    //redirect to home page
-    if(typeof cb === "function"){
-        cb()
-    }
-}
-
-export function* handleLogOutSaga(action) {
-    
-    const { payload } = action;
-    const { cb } = payload
-    localStorage.removeItem("access_token");
-
-    //redirect to login page
-    if(typeof cb === "function"){
-        cb()
-    }
-    
-}
-
-export function* watchLoginFlow() {
-
-    while(true){
-     
-        const isLogedIn = Boolean(localStorage.getItem("access_token"))
-        if(!isLogedIn){
-            const action = yield take(authAction.login().type)
-            yield fork(handleLoginSaga, action)
+          // redirect to home page
+        if (typeof onSuccess === "function") {
+          onSuccess();
         }
-        const action = yield take(authAction.logOut().type)
-        yield call(handleLogOutSaga, action)
+
+    }catch(error){
+      console.log(error.message)
+      yield put(authAction.loginFailed(error.message));
     }
+
+}
+
+function* handleLogOutSaga(action) {
+  const { payload } = action;
+  const { cb } = payload;
+  localStorage.removeItem("access_token");
+
+  //redirect to login page
+  if (typeof cb === "function") {
+    cb();
+  }
+}
+
+function* watchLoginFlow() {
+  while (true) {
+    const isLogedIn = Boolean(localStorage.getItem("access_token"));
+    if (!isLogedIn) {
+      const action = yield take(authAction.login().type);
+      yield fork(handleLoginSaga, action);
+    }
+    const action = yield take(authAction.logOut().type);
+    yield call(handleLogOutSaga, action);
+  }
+}
+
+function* handleRegisterSaga(action) {
+
+  const { data, onError, onSuccess } = action.payload;
+
+
+  try{
+    const response = yield createUserWithEmailAndPassword(auth, data.email, data.password)
+    if(response){
+      if(typeof onSuccess === "function"){
+        onSuccess(response)
+      }
+    }
+  }
+  catch(error){
+    if(typeof onError === "function"){
+      onError(error)
+    }
+
+  }
+
+
 }
 
 export default function* authSaga() {
-    yield fork(watchLoginFlow)
+  yield fork(watchLoginFlow);
+  yield takeLatest(authAction.register().type, handleRegisterSaga)
 }

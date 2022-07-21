@@ -1,10 +1,10 @@
 export const isValidEmail = (email) => {
-    return /\S+@\S+\.\S+/.test(email);
-}
+  return /\S+@\S+\.\S+/.test(email);
+};
 
 export const isPassWordValid = (password) => {
-    if(!password){
-        return false
-    }
-    return true;
-}
+  if (!password) {
+    return false;
+  }
+  return true;
+};
