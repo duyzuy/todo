@@ -1,14 +1,14 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { authAction } from "../../features/auth/authSlice";
-import { auth } from "../../firebaseConfig";
+import { useAuthFirebase } from "../../hooks/authFirebase"
+
 export const PrivateRoute = ({ redirectPath, children, type = "guest" }) => {
+  
   const isLoggedIn = Boolean(localStorage.getItem("access_token"));
 
   const path = redirectPath ? redirectPath : "/login";
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+
   const parseJwt = (token) => {
 
     try{
@@ -17,10 +17,11 @@ export const PrivateRoute = ({ redirectPath, children, type = "guest" }) => {
         return Promise.reject(error)
     }
 
-}
+  }
 
   if (type === "guest" && isLoggedIn) {
-    return <Navigate to="/admin" replace />;
+    return <Navigate to="/admin/dashboard" replace />;
+
   }
 
   if (type === "private" && !isLoggedIn) {
@@ -32,25 +33,8 @@ export const PrivateRoute = ({ redirectPath, children, type = "guest" }) => {
     const { exp } = parseJwt(accessToken)
     const date = new Date();
     const currentTime = date.getTime();
-    const expTime = new Date(exp * 1000).getTime();
-    // auth.currentUser.getIdToken()
-    // .then( (idToken) => {
-    //   console.log(idToken)
-    // }).catch(function(error) {
-    //   // Handle error
-    //   console.log(error)
-    // });
-    console.log(parseJwt(accessToken))
-   
-    console.log('1')
-    if(expTime > currentTime){
-      
-    }else{
-     
-       dispatch(authAction.logOut({onSuccess: () => {navigate("/login")}}))
-    }
-   
-  }
+    const expTime = new Date(exp * 1000).getTime();  
 
+  }
   return children ? children : <Outlet />;
 };

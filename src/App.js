@@ -6,6 +6,7 @@ import LoginPage from "./features/auth/pages/LoginPage";
 import RegisterPage from "./features/auth/pages/RegisterPage";
 import Dashboard from "./features/dashboard/Dashboard";
 import User from "./features/user/User";
+import Profile from "./features/profile/Profile";
 const App = () => {
 
   return (
@@ -21,6 +22,7 @@ const App = () => {
         <Route element={<AdminLayout />}>
           <Route path="/admin/dashboard" element={<Dashboard />}/>
           <Route path="/admin/user" element={<User />}/>
+          <Route path="/admin/profile" element={<Profile />}/>
         </Route>
       </Route>
 

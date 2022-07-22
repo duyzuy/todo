@@ -26,7 +26,7 @@ export const authSlice = createSlice({
     },
     loginFailed: (state, action) => {
       state.isLoading = false;
-      console.log("login fail")
+      console.log("login fail");
     },
     logOut: (state) => {
       state = {
@@ -37,11 +37,15 @@ export const authSlice = createSlice({
       return state;
     },
     register: (state) => {
-      state.isLoading = true
+      state.isLoading = true;
     },
-    registerSuccess: () => {
-      
-    }
+    registerSuccess: () => {},
+    getProfile: (state) => {
+      console.log("get");
+    },
+    getProfileSuccess: (state, action) => {
+      console.log(action);
+    },
   },
 });
 

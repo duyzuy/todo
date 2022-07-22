@@ -1,7 +1,7 @@
 import { take, put, fork, delay, call, takeLatest } from "redux-saga/effects";
 import { authAction } from "./authSlice";
 import { auth } from "../../firebaseConfig";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 function* handleLoginSaga(action) {
   //get response from api (fake api)
   yield delay(1000);
@@ -34,8 +34,7 @@ function* handleLogOutSaga(action) {
   const { payload } = action;
   const { onSuccess, onError } = payload;
   try{
-    const response = yield signOut(auth)
-
+    yield signOut(auth)
     localStorage.removeItem("access_token");
 
     //redirect to login page
@@ -80,10 +79,30 @@ function* handleRegisterSaga(action) {
 
   }
 
+}
+
+function* handleGetProfileSaga () {
+
+  console.log('1')
+  try{
+    const user = yield onAuthStateChanged(auth, (user) => {
+      if(user){
+        console.log(user)
+        return user;
+      }
+    
+    
+    })
+    console.log(user)
+  }catch{
+
+  }
+
 
 }
 
 export default function* authSaga() {
   yield fork(watchLoginFlow);
   yield takeLatest(authAction.register().type, handleRegisterSaga)
+  yield takeLatest(authAction.getProfile().type, handleGetProfileSaga)
 }
