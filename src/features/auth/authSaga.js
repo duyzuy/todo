@@ -1,9 +1,7 @@
 import { take, put, fork, delay, call, takeLatest } from "redux-saga/effects";
 import { authAction } from "./authSlice";
-import { addDoc, collection } from "firebase/firestore"; 
-import {db} from "../../firebaseConfig";
 import { auth } from "../../firebaseConfig";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 function* handleLoginSaga(action) {
   //get response from api (fake api)
   yield delay(1000);
@@ -15,7 +13,7 @@ function* handleLoginSaga(action) {
     try {
         const response = yield signInWithEmailAndPassword(auth, data.email, data.password);
         //save data on local storage
-        localStorage.setItem("access_token", response.accessToken);
+        localStorage.setItem("access_token", response.user.accessToken);
 
         //update state after login success
         yield put(authAction.loginSuccess(response.user));
@@ -34,12 +32,19 @@ function* handleLoginSaga(action) {
 
 function* handleLogOutSaga(action) {
   const { payload } = action;
-  const { cb } = payload;
-  localStorage.removeItem("access_token");
+  const { onSuccess, onError } = payload;
+  try{
+    const response = yield signOut(auth)
 
-  //redirect to login page
-  if (typeof cb === "function") {
-    cb();
+    localStorage.removeItem("access_token");
+
+    //redirect to login page
+    if (typeof onSuccess === "function") {
+        onSuccess();
+    }
+  }
+  catch(error){
+    onError(error)
   }
 }
 

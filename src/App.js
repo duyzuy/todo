@@ -5,11 +5,11 @@ import { NotFound, PrivateRoute } from "./components/Common";
 import LoginPage from "./features/auth/pages/LoginPage";
 import RegisterPage from "./features/auth/pages/RegisterPage";
 import Dashboard from "./features/dashboard/Dashboard";
-
+import User from "./features/user/User";
 const App = () => {
 
   return (
-    <Routes>
+      <Routes>
       {/* <Route path="/" element={<HomePage />}></Route> */}
 
       <Route element={<PrivateRoute type="guest" />}>
@@ -19,7 +19,8 @@ const App = () => {
       <Route path="/register" element={<RegisterPage />} />
       <Route element={<PrivateRoute type="private" />}>
         <Route element={<AdminLayout />}>
-          <Route path="/admin" element={<Dashboard />} />
+          <Route path="/admin/dashboard" element={<Dashboard />}/>
+          <Route path="/admin/user" element={<User />}/>
         </Route>
       </Route>
 

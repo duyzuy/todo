@@ -11,7 +11,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import GroupIcon from '@mui/icons-material/Group';
 import LogoutIcon from '@mui/icons-material/Logout';
 import "./admin.scss";
-
+import { NavLink } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -19,16 +19,20 @@ export const AdminLayout = ({ childen }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogout = () => {
-    dispatch(authAction.logOut({ cb: redirectAfterLogout }));
+    dispatch(authAction.logOut({ 
+      onSuccess: () => { navigate("/login", { state: null })},
+      onError: (error) => {console.log(error)}
+
+     }));
   };
   const [openSidebar, setOpenSidebar] = useState(true)
-  const redirectAfterLogout = () => {
-    navigate("/login", { state: null });
-  };
+
   const toggleDrawer = () => {
     setOpenSidebar(!openSidebar)
   }
-
+  const activeStyle = {
+    backgroundColor: "red"
+  }
   return (
     <Box className="admin" component="main">
 
@@ -107,16 +111,30 @@ export const AdminLayout = ({ childen }) => {
                 <Divider />
                 <List component="nav">
                   <ListItemButton>
-                    <ListItemIcon>
-                      <DashboardIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Dashboard" />
+                    <NavLink
+                       to="admin/dashboard"
+                       style={({ isActive }) =>
+                         isActive ? activeStyle : undefined
+                       }
+                      >
+                      <ListItemIcon>
+                        <DashboardIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Dashboard" />
+                    </NavLink>
                   </ListItemButton>
                   <ListItemButton>
+                  <NavLink
+                       to="admin/user"
+                       style={({ isActive }) =>
+                         isActive ? activeStyle : undefined
+                       }
+                      >
                     <ListItemIcon>
                       <GroupIcon />
                     </ListItemIcon>
                     <ListItemText primary="Users" />
+                  </NavLink>
                   </ListItemButton>
                   <Divider sx={{ my: 1 }} />
                   <ListItemButton

@@ -20,7 +20,6 @@ const LoginPage = () => {
     password: "",
   });
 
-  
   const handleChange = useCallback(
     (name, value) => {
       setLoginData((prevState) => ({ ...prevState, [name]: value }));
@@ -42,7 +41,7 @@ const LoginPage = () => {
       dispatch(
         authAction.login({
           data: loginData,
-          onSuccess: () => navigate("/admin", { state: loginData }),
+          onSuccess: () => navigate("/admin/dashboard", { state: loginData }),
           onError: () => {
             console.log("error");
           },
