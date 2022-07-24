@@ -44,7 +44,16 @@ export const authSlice = createSlice({
       console.log("get");
     },
     getProfileSuccess: (state, action) => {
-      console.log(action);
+      state = {
+        ...state,
+        user: {
+          email: action.payload.email,
+          displayName: action.payload.displayName,
+          emailVerified: action.payload.emailVerified,
+          photoURL: action.payload.photoURL,
+        },
+      };
+      return state;
     },
   },
 });

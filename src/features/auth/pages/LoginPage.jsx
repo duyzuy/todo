@@ -8,8 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { isValidEmail, isPassWordValid } from "../../../utils/validation";
 import LoginForm from "../components/LoginForm";
 import { useNavigate } from "react-router-dom";
-import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../../firebaseConfig";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
@@ -51,20 +49,6 @@ const LoginPage = () => {
 
 
   };
-  useEffect( () => {
-    // onAuthStateChanged(auth, (user) => {
-    //   if (user) {
-    //     // User is signed in, see docs for a list of available properties
-    //     // https://firebase.google.com/docs/reference/js/firebase.User
-    //     const uid = user.uid;
-    //     console.log(user)
-    //     // ...
-    //   } else {
-    //     // User is signed out
-    //     // ...
-    //   }
-    // });
-  }, [])
   return (
     <Container component="main" maxWidth="sm" className="login">
       <Paper elevation={3} className="login__wrapper">

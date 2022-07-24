@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Toolbar,
@@ -9,8 +9,15 @@ import {
 } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MenuIcon from "@mui/icons-material/Menu";
-
+import { useDispatch, useSelector } from "react-redux";
 const Header = ({ openSidebar, drawerWidth, toggleDrawer }) => {
+
+  const dispatch = useDispatch();
+
+  useEffect( () => {
+    
+  }, [])
+  
   return (
     <AppBar
       className="admin__header"

@@ -1,28 +1,42 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { AdminLayout } from "./components/Layout";
-import { NotFound, PrivateRoute } from "./components/Common";
-import LoginPage from "./features/auth/pages/LoginPage";
-import RegisterPage from "./features/auth/pages/RegisterPage";
-import Dashboard from "./features/dashboard/Dashboard";
-import User from "./features/user/User";
-import Profile from "./features/profile/Profile";
+import {
+  NotFound,
+  PrivateRoute,
+} from "./components/Common";
+import {
+  PRIVATE_ROUTES,
+  AUTH_ROUTES,
+} from "./constants/routes";
 const App = () => {
-
   return (
-      <Routes>
-      {/* <Route path="/" element={<HomePage />}></Route> */}
-
+    <Routes>
       <Route element={<PrivateRoute type="guest" />}>
-        <Route path="/login" element={<LoginPage />} />
+        {AUTH_ROUTES.map((route, index) => {
+          const Component = route.component;
+          return (
+            <Route
+              key={index}
+              path={route.path}
+              element={<Component />}
+            />
+          );
+        })}
       </Route>
 
-      <Route path="/register" element={<RegisterPage />} />
       <Route element={<PrivateRoute type="private" />}>
-        <Route element={<AdminLayout />}>
-          <Route path="/admin/dashboard" element={<Dashboard />}/>
-          <Route path="/admin/user" element={<User />}/>
-          <Route path="/admin/profile" element={<Profile />}/>
+        <Route path="/admin" element={<AdminLayout />}>
+          {PRIVATE_ROUTES.map((route, index) => {
+            const Component = route.component;
+            return (
+              <Route
+                key={index}
+                path={route.path}
+                element={<Component />}
+              />
+            );
+          })}
         </Route>
       </Route>
 

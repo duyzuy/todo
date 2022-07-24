@@ -14,16 +14,11 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { authAction } from "../../features/auth/authSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import GroupIcon from "@mui/icons-material/Group";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { NavLink } from "react-router-dom";
-import { PRIVATE_ROUTES } from "../../constants/routes";
+import { MENU } from "../../constants/menu";
 import DescriptionIcon from "@mui/icons-material/Description";
 import { CustomLink } from "../Common";
-const activeStyle = {
-  backgroundColor: "red",
-};
+
 const SideBar = ({ openSidebar, drawerWidth, toggleDrawer }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -72,18 +67,18 @@ const SideBar = ({ openSidebar, drawerWidth, toggleDrawer }) => {
         </Toolbar>
         <Divider />
         <List component="nav" className="nav__items">
-          {PRIVATE_ROUTES.map((route, index) => {
-            const IconMenu = route.icon || DescriptionIcon;
+          {MENU.map((menuIem, index) => {
+            const IconMenu = menuIem.icon || DescriptionIcon;
             return (
               <CustomLink
-                path={`admin/${route.path}`}
+                path={menuIem.path}
                 className="nav__link"
                 key={index}
               >
                 <span className="nav__item__icon">
                   <IconMenu />
                 </span>
-                <p className="nav__item__text">{route.name}</p>
+                <p className="nav__item__text">{menuIem.name}</p>
               </CustomLink>
             );
           })}
